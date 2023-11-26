@@ -1,6 +1,6 @@
-import { Card, Form, Input, Button, Checkbox } from "antd";
-import logo from "@/assets/logo.png";
 import "./index.scss";
+import { Card, Form, Input, Button } from "antd";
+import logo from "@/assets/logo.png";
 
 const Login = () => {
   return (
@@ -8,18 +8,34 @@ const Login = () => {
       <Card className="login-container">
         <img className="login-logo" src={logo} alt="" />
         {/* 登录表单 */}
-
-        <Form>
-          <Form.Item>
+        <Form
+          // 表单失焦时验证
+          validateTrigger="onBlur"
+        >
+          <Form.Item
+            // 表单验证
+            name="mobile"
+            rules={[
+              // 非空验证
+              { required: true, message: "请输入手机号" },
+              // 手机号位数验证
+              {
+                pattern: /^1[3-9]\d{9}$/,
+                message: "手机号码格式不对",
+              },
+            ]}
+          >
             <Input size="large" placeholder="请输入手机号" />
           </Form.Item>
-          <Form.Item>
+          <Form.Item
+            // 表单验证
+            name="code"
+            rules={[
+              // 非空验证
+              { required: true, message: "请输入验证码" },
+            ]}
+          >
             <Input size="large" placeholder="请输入验证码" />
-          </Form.Item>
-          <Form.Item>
-            <Checkbox className="login-checkbox-label">
-              我已阅读并同意「用户协议」和「隐私条款」
-            </Checkbox>
           </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit" size="large" block>
