@@ -3,6 +3,9 @@ import { Card, Form, Input, Button } from "antd";
 import logo from "@/assets/logo.png";
 
 const Login = () => {
+  const onFinish = (values) => {
+    console.log(values);
+  };
   return (
     <div className="login">
       <Card className="login-container">
@@ -11,6 +14,8 @@ const Login = () => {
         <Form
           // 表单失焦时验证
           validateTrigger="onBlur"
+          // 提交表单时的回调
+          onFinish={onFinish}
         >
           <Form.Item
             // 表单验证
