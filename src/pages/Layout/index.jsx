@@ -7,6 +7,9 @@ import {
 } from "@ant-design/icons";
 import "./index.scss";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUserInfo } from "@/store/modules/user";
 
 const { Header, Sider } = Layout;
 
@@ -40,12 +43,23 @@ const GeekLayout = () => {
   // 2. 把pathname绑定到对应的控制高亮的属性上
   const location = useLocation();
   const selectedKey = location.pathname;
+
+  /* ------------ 页面初次渲染，触发fetchUserInfo的action ----------- */
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(fetchUserInfo());
+  }, [dispatch]);
+  // 获取useInfo状态，并渲染到页面
+  const { name } = useSelector((state) => state.user.userInfo);
+  console.log(name);
+
   return (
     <Layout>
       <Header className="header">
         <div className="logo" />
         <div className="user-info">
-          <span className="user-name">柴柴老师</span>
+          {/* 渲染用户信息到页面 */}
+          <span className="user-name">{name}</span>
           <span className="user-logout">
             <Popconfirm title="是否确认退出？" okText="退出" cancelText="取消">
               <LogoutOutlined /> 退出
