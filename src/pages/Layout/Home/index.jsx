@@ -1,13 +1,14 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import * as echarts from "echarts";
 
 export const Home = () => {
+  const chartRef = useRef(null);
   // useEffect钩子保证页面初次加载就能渲染dom
   useEffect(() => {
     // 保证dom可用，才能进行图标渲染
 
-    // 1. 获取显然图标的dom节点
-    const chartDom = document.getElementById("main");
+    // 1. 获取渲染图标的dom节点。可以使用useRef获取
+    const chartDom = chartRef.current;
 
     // 2. 图标初始化，生成图标实例对象
     const myChart = echarts.init(chartDom);
@@ -16,14 +17,14 @@ export const Home = () => {
     const option = {
       xAxis: {
         type: "category",
-        data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+        data: ["REACT", "VUE", "REGULAR"],
       },
       yAxis: {
         type: "value",
       },
       series: [
         {
-          data: [120, 200, 150, 80, 70, 110, 130],
+          data: [100, 160, 70],
           type: "bar",
         },
       ],
@@ -35,7 +36,7 @@ export const Home = () => {
   return (
     <div>
       {/* 准备用于绑定图标渲染的dom节点,必须有宽和高 */}
-      <div id="main" style={{ width: "600px", height: "400px" }}></div>
+      <div ref={chartRef} style={{ width: "600px", height: "400px" }}></div>
     </div>
   );
 };
