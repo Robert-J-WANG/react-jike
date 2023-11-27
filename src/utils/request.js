@@ -4,7 +4,8 @@
 // 3. 请求拦截器、响应拦截器
 
 import axios from "axios";
-import { getToken } from "./token";
+import { getToken, removeToken } from "./token";
+import router from "@/router";
 
 const request = axios.create({
   // 1. 根域名配置
@@ -42,6 +43,17 @@ request.interceptors.response.use(
   (error) => {
     // 超出 2xx 范围的状态码都会触发该函数。
     // 对响应错误做点什么
+    /* ------------ token失效，监控401状态码，处理token失效的逻辑 ----------- */
+    console.dir(error);
+    if (error.response.status === 401) {
+      // 1. 清除token
+      removeToken();
+      // 2. 跳转到登录页
+      router.navigate("/login");
+      // 3. 跳转时有个bug，需要强制刷新页面
+      window.location.reload();
+    }
+
     return Promise.reject(error);
   }
 );
