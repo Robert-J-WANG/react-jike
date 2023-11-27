@@ -12,7 +12,7 @@ const Login = () => {
   const navigate = useNavigate();
   // 提交表单的回调
   const onFinish = async (values) => {
-    console.log(values);
+    // console.log(values);
     // 触发异步方法，提交表单数据，是useDispatch钩子
     await dispatch(fetchLogin(values));
     // 登录成功之后怎么操作？

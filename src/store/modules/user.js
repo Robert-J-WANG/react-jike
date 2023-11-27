@@ -6,12 +6,15 @@ const userStore = createSlice({
   name: "user",
   // 初始化状态
   initialState: {
-    token: "",
+    // 有本地存储有吗？
+    token: localStorage.getItem("token_key") || "",
   },
   reducers: {
     // 同步方法
     setToken(state, action) {
       state.token = action.payload;
+      // 本地存储也保存一份
+      localStorage.setItem("token_key", action.payload);
     },
   },
 });
@@ -21,8 +24,9 @@ const fetchLogin = (loginForm) => {
   return async (dispatch) => {
     // 使用封装的axios方法request
     const res = await request.post("/authorizations", loginForm);
+    console.log(res);
     // 调用同步方法，更新状态
-    dispatch(setToken(res.data));
+    dispatch(setToken(res.data.token));
   };
 };
 
