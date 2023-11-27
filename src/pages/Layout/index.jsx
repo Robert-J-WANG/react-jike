@@ -6,7 +6,7 @@ import {
   LogoutOutlined,
 } from "@ant-design/icons";
 import "./index.scss";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 
 const { Header, Sider } = Layout;
 
@@ -18,22 +18,28 @@ const items = [
   },
   {
     label: "文章管理",
-    key: "article",
+    key: "/article",
     icon: <DiffOutlined />,
   },
   {
     label: "创建文章",
-    key: "publish",
+    key: "/publish",
     icon: <EditOutlined />,
   },
 ];
 
 const GeekLayout = () => {
+  /* ---------------------- 点击菜单跳转路由 ---------------------- */
   const navigate = useNavigate();
   const onClickMenu = (route) => {
     console.log(route);
     navigate(route.key);
   };
+  /* -------------------- 选中组件内容，反向高亮菜单 ------------------- */
+  // 1. 获取当前的pathname:使用useLocation()钩子
+  // 2. 把pathname绑定到对应的控制高亮的属性上
+  const location = useLocation();
+  const selectedKey = location.pathname;
   return (
     <Layout>
       <Header className="header">
@@ -52,7 +58,8 @@ const GeekLayout = () => {
           <Menu
             mode="inline"
             theme="dark"
-            defaultSelectedKeys={["/"]}
+            // 2. 把pathname绑定到对应的控制高亮的属性上
+            selectedKeys={selectedKey}
             items={items}
             style={{ height: "100%", borderRight: 0 }}
             onClick={onClickMenu}
