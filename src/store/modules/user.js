@@ -1,4 +1,4 @@
-import { setToken as _setToken, getToken, request } from "@/utils";
+import { setToken as _setToken, getToken, removeToken, request } from "@/utils";
 import { createSlice } from "@reduxjs/toolkit";
 
 // 和用户相关的状态管理
@@ -21,6 +21,13 @@ const userStore = createSlice({
     // 同步方法-更新userInfo
     setUserInfo(state, action) {
       state.userInfo = action.payload;
+    },
+    // 同步方法-清除用户信息
+    clearUserInfo(state) {
+      state.token = "";
+      state.userInfo = {};
+      // 清除本地存储
+      removeToken();
     },
   },
 });
@@ -48,8 +55,8 @@ const fetchUserInfo = () => {
 };
 
 // 解构出actionCreater方法
-const { setToken, setUserInfo } = userStore.actions;
-export { fetchLogin, fetchUserInfo };
+const { setToken, setUserInfo, clearUserInfo } = userStore.actions;
+export { fetchLogin, fetchUserInfo, clearUserInfo };
 // 获取reducer函数，并导出
 const userReducer = userStore.reducer;
 export default userReducer;
