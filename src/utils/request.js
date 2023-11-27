@@ -4,6 +4,7 @@
 // 3. 请求拦截器、响应拦截器
 
 import axios from "axios";
+import { getToken } from "./token";
 
 const request = axios.create({
   // 1. 根域名配置
@@ -16,6 +17,13 @@ const request = axios.create({
 // 在请求发送之前做拦截：做一些自定义的配置（比如请求参数）
 request.interceptors.request.use(
   (config) => {
+    // 请求头中注入token设置
+    // 1. 获取到token
+    // 2. 按照后端的格式要求做token拼接
+    const token = getToken();
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
     return config;
   },
   (error) => {
