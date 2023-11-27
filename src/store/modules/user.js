@@ -1,3 +1,4 @@
+import { request } from "@/utils";
 import { createSlice } from "@reduxjs/toolkit";
 
 // 和用户相关的状态管理
@@ -15,8 +16,19 @@ const userStore = createSlice({
   },
 });
 
+// 编写异步方法，提交表单数据
+const fetchLogin = (loginForm) => {
+  return async (dispatch) => {
+    // 使用封装的axios方法request
+    const res = await request.post("/authorizations", loginForm);
+    // 调用同步方法，更新状态
+    dispatch(setToken(res.data));
+  };
+};
+
 // 解构出actionCreater方法
 const { setToken } = userStore.actions;
+export { setToken, fetchLogin };
 // 获取reducer函数，并导出
 const userReducer = userStore.reducer;
 export default userReducer;

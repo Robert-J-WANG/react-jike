@@ -1,10 +1,16 @@
 import "./index.scss";
 import { Card, Form, Input, Button } from "antd";
 import logo from "@/assets/logo.png";
+import { useDispatch } from "react-redux";
+import { fetchLogin } from "@/store/modules/user";
 
 const Login = () => {
+  const dispatch = useDispatch();
+  // 提交表单的回调
   const onFinish = (values) => {
     console.log(values);
+    // 触发异步方法，提交表单数据，是useDispatch钩子
+    dispatch(fetchLogin(values));
   };
   return (
     <div className="login">
