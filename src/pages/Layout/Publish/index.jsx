@@ -16,10 +16,28 @@ import "./index.scss";
 // 富文本编辑器的包和样式
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import { useEffect, useState } from "react";
+import { getChannelApi } from "@/apis/articleApi";
 
 const { Option } = Select;
 
 const Publish = () => {
+  /* ---------------------1. channel列表功能 -------------------- */
+  // 1. 根据接口文档，在APIs模块中封装接口函数：
+  // apis->article.js->getChannels
+  // 2. 使用useState维护数据
+  // 3. 使用useEffect，调用接口函数获取数据并存入state
+  // 4. 绑定数据到下拉框组件
+  const [channelList, setChannelList] = useState([]);
+  useEffect(() => {
+    // 定义异步方法来调用接口
+    const fetchChannels = async () => {
+      const res = await getChannelApi();
+      setChannelList(res.data.channels);
+    };
+    // 调用一步方法
+    fetchChannels();
+  }, []);
   return (
     <div className="publish">
       <Card
@@ -50,7 +68,12 @@ const Publish = () => {
             rules={[{ required: true, message: "请选择文章频道" }]}
           >
             <Select placeholder="请选择文章频道" style={{ width: 400 }}>
-              <Option value={0}>推荐</Option>
+              {/* // 4. 绑定数据到下拉框组件 */}
+              {channelList.map((item) => (
+                <Option key={item.id} value={item.id}>
+                  {item.name}
+                </Option>
+              ))}
             </Select>
           </Form.Item>
           <Form.Item
