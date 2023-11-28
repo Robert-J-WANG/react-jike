@@ -51,7 +51,7 @@ const GeekLayout = () => {
   }, [dispatch]);
   // 获取useInfo状态，并渲染到页面
   const { name } = useSelector((state) => state.user.userInfo);
-  console.log(name);
+  // console.log(name);
 
   /* ----------------------- 退出登录功能： ---------------------- */
   // 1. 清除用户信息

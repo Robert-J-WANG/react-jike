@@ -17,7 +17,7 @@ import "./index.scss";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { useEffect, useState } from "react";
-import { getChannelApi } from "@/apis/articleApi";
+import { createArticleApi, getChannelApi } from "@/apis/articleApi";
 
 const { Option } = Select;
 
@@ -38,6 +38,29 @@ const Publish = () => {
     // 调用一步方法
     fetchChannels();
   }, []);
+
+  /* ---------------------- 2.发布文章功能 ---------------------- */
+  // 1. 使用form组件收集表单数据 onFinsh方法
+  // 2. 按照接口文档封装接口函数：apis->channelApi->createArticleApi
+  // 3. 按照接口文档处理表单数据
+  // 4. 提交接口并验证是否成功
+  // 收集表单数据的回调
+  const onFinish = (formValues) => {
+    console.log(formValues);
+    const { title, content, channel_id } = formValues;
+    // 处理表单数据
+    const data = {
+      title,
+      content,
+      cover: {
+        type: 0,
+        image: [],
+      },
+      channel_id,
+    };
+    // 提交数据到接口
+    createArticleApi(data);
+  };
   return (
     <div className="publish">
       <Card
@@ -54,6 +77,8 @@ const Publish = () => {
           labelCol={{ span: 4 }}
           wrapperCol={{ span: 16 }}
           initialValues={{ type: 1 }}
+          // 收集表单数据的方法
+          onFinish={onFinish}
         >
           <Form.Item
             label="标题"

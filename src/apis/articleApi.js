@@ -7,3 +7,11 @@ export function getChannelApi() {
     method: "GET",
   });
 }
+
+export function createArticleApi(data) {
+  return request({
+    url: "/mp/articles?draft=false",
+    method: "POST",
+    data,
+  });
+}
