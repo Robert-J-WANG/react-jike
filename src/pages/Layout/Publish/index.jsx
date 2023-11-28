@@ -8,6 +8,7 @@ import {
   Upload,
   Space,
   Select,
+  message,
 } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
@@ -48,13 +49,16 @@ const Publish = () => {
   const onFinish = (formValues) => {
     console.log(formValues);
     const { title, content, channel_id } = formValues;
+    // 优化：边界判断-上传图片的数量要和图片类型相符
+    if (imageType !== imageList.length)
+      return message.warning("图片数量不符合上传类型");
     // 处理表单数据
     const data = {
       title,
       content,
       cover: {
-        type: 0,
-        image: [],
+        type: imageType, // 上传图片的类型：0-无图，1-1图，3-3图
+        image: imageList.map((item) => item.response.data.url), // 图片列表
       },
       channel_id,
     };
