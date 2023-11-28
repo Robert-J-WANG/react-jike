@@ -4,7 +4,7 @@ import Login from "@/pages/Login";
 import { AuthRoute } from "@/components/AuthRoute";
 import { Home } from "@/pages/Layout/Home";
 import { Article } from "@/pages/Layout/Article";
-import { Publish } from "@/pages/Layout/Publish";
+import Publish from "@/pages/Layout/Publish";
 
 // 配置路由
 const router = createBrowserRouter([
