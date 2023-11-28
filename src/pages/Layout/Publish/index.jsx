@@ -82,6 +82,10 @@ const Publish = () => {
     // console.log(e.target.value);
     setImageType(e.target.value);
   };
+  /* -------------------- 5. 设置上传图片的数量功能 -------------------- */
+  // 1. 找到限制上传数量的组件属性：maxCount
+  // 2. 使用imageType进行绑定控制
+
   return (
     <div className="publish">
       <Card
@@ -144,6 +148,9 @@ const Publish = () => {
                 action={"http://geek.itheima.net/v1_0/upload"}
                 name="image"
                 onChange={onImageChange}
+                // 1. 找到限制上传数量的组件属性：maxCount
+                // 2. 使用imageType进行绑定控制
+                maxCount={imageType}
               >
                 <div style={{ marginTop: 8 }}>
                   <PlusOutlined />
