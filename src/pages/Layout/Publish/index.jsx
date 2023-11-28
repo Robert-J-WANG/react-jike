@@ -61,6 +61,17 @@ const Publish = () => {
     // 提交数据到接口
     createArticleApi(data);
   };
+  /* --------------------- 3. 发布封面图片功能 -------------------- */
+  // 1. 为 Upload 组件添加 `action 属性`，配置封面图片上传接口地址
+  // 2. 为 Upload组件添加 `name属性`, 接口要求的字段名
+  // 3. 为 Upload 添加 `onChange 属性`，在事件中拿到当前图片数据，并存储到React状态中
+  // 保存上传完成图片的数据
+  const [imageList, setImageList] = useState([]);
+  // 上传图片的回调
+  const onChange = (value) => {
+    console.log(value);
+    setImageList(value.fileList);
+  };
   return (
     <div className="publish">
       <Card
@@ -100,6 +111,31 @@ const Publish = () => {
                 </Option>
               ))}
             </Select>
+          </Form.Item>
+          {/* 封面图片区域 */}
+          <Form.Item label="封面">
+            <Form.Item name="type">
+              <Radio.Group>
+                <Radio value={1}>单图</Radio>
+                <Radio value={3}>三图</Radio>
+                <Radio value={0}>无图</Radio>
+              </Radio.Group>
+            </Form.Item>
+            {/* 
+            listType：控制选择文件框的外观样式
+            showUploadList：控制显示上传列表
+             */}
+            <Upload
+              listType="picture-card"
+              showUploadList
+              action={"http://geek.itheima.net/v1_0/upload"}
+              name="image"
+              onChange={onChange}
+            >
+              <div style={{ marginTop: 8 }}>
+                <PlusOutlined />
+              </div>
+            </Upload>
           </Form.Item>
           <Form.Item
             label="内容"
