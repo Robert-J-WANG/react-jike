@@ -68,9 +68,19 @@ const Publish = () => {
   // 保存上传完成图片的数据
   const [imageList, setImageList] = useState([]);
   // 上传图片的回调
-  const onChange = (value) => {
+  const onImageChange = (value) => {
     console.log(value);
     setImageList(value.fileList);
+  };
+  /* --------------------- 4.切换封面类型功能 --------------------- */
+  // 1. 获取当前封面的类型:onChange方法
+  // 2. 根据类型，对上传组件进行条件渲染
+  // 保存当前封面类型数据
+  const [imageType, setImageType] = useState(0); // 0是无图模式
+  // 获取类型的回调
+  const onTypeChange = (e) => {
+    // console.log(e.target.value);
+    setImageType(e.target.value);
   };
   return (
     <div className="publish">
@@ -87,7 +97,8 @@ const Publish = () => {
         <Form
           labelCol={{ span: 4 }}
           wrapperCol={{ span: 16 }}
-          initialValues={{ type: 1 }}
+          // 设置默认图片模式为无图
+          initialValues={{ type: 0 }}
           // 收集表单数据的方法
           onFinish={onFinish}
         >
@@ -115,27 +126,30 @@ const Publish = () => {
           {/* 封面图片区域 */}
           <Form.Item label="封面">
             <Form.Item name="type">
-              <Radio.Group>
+              <Radio.Group onChange={onTypeChange}>
                 <Radio value={1}>单图</Radio>
                 <Radio value={3}>三图</Radio>
                 <Radio value={0}>无图</Radio>
               </Radio.Group>
             </Form.Item>
-            {/* 
-            listType：控制选择文件框的外观样式
-            showUploadList：控制显示上传列表
-             */}
-            <Upload
-              listType="picture-card"
-              showUploadList
-              action={"http://geek.itheima.net/v1_0/upload"}
-              name="image"
-              onChange={onChange}
-            >
-              <div style={{ marginTop: 8 }}>
-                <PlusOutlined />
-              </div>
-            </Upload>
+            {/* // 2. 根据类型，对上传组件进行条件渲染 */}
+            {imageType > 0 && (
+              /* 
+              listType：控制选择文件框的外观样式
+              showUploadList：控制显示上传列表 
+              */
+              <Upload
+                listType="picture-card"
+                showUploadList
+                action={"http://geek.itheima.net/v1_0/upload"}
+                name="image"
+                onChange={onImageChange}
+              >
+                <div style={{ marginTop: 8 }}>
+                  <PlusOutlined />
+                </div>
+              </Upload>
+            )}
           </Form.Item>
           <Form.Item
             label="内容"
