@@ -46,11 +46,8 @@ request.interceptors.response.use(
     /* ------------ token失效，监控401状态码，处理token失效的逻辑 ----------- */
     console.dir(error);
     if (error.response.status === 401) {
-      // 1. 清除token
       removeToken();
-      // 2. 跳转到登录页
       router.navigate("/login");
-      // 3. 跳转时有个bug，需要强制刷新页面
       window.location.reload();
     }
 
