@@ -133,16 +133,18 @@ const Article = () => {
     channel_id: "",
     begin_pubdate: "",
     end_pubdate: "",
-    page: "2",
+    page: "1",
     per_page: "10",
   });
 
   /* ------------------- 2. 获取文章列表，渲染表格 ------------------- */
+  /*
   // 1. 封装获取文章列表的api:apis->articleApi->getArticleListApi
   // 2. 状态数据保存返回的文章列表结果->useState
   // 3. 定义副作用函数，调用接口，获取数据
   // 4. 保存数据到状态
   // 5. 使用数据渲染到页面
+   */
   const [articleList, setArticleList] = useState([]);
   // 存储文章总数
   const [articleCount, setArticleCount] = useState(0);
@@ -190,6 +192,17 @@ const Article = () => {
     // 4. 重新调用获取文章列表的接口，渲染表格数据的逻辑与初始化页面时渲染表格的逻辑重复
     // 可利用useEffect钩子的依赖项的变化，重复执行副作用函数来实现
   };
+
+  /* ----------------------- 5. 分页功能 ---------------------- */
+  // 1. 实现分页展示（页数=总数/每页条数）：table的pagination属性实现
+  // 2. 点击分页拿到当前点击的页数
+  const onPageChange = (page) => {
+    console.log(page); // 2
+    // 3. 使用当前页数作为请求参数，重新获取文章列表显然
+    // 通过修改依赖项，引发副作用函数的重新调用
+    setReqData({ ...reqData, page });
+  };
+
   return (
     <div>
       {/* 筛选区结构 */}
@@ -239,7 +252,17 @@ const Article = () => {
       {/* 表格区结构 */}
       <Card title={`根据筛选条件共查询到 count 条结果：${articleCount}`}>
         {/* // 5. 使用数据渲染到页面 */}
-        <Table rowKey="id" columns={columns} dataSource={articleList} />
+        <Table
+          rowKey="id"
+          columns={columns}
+          dataSource={articleList}
+          // pagination属性-控制分页功能
+          pagination={{
+            total: articleCount,
+            pageSize: reqData.per_page,
+            onChange: onPageChange,
+          }}
+        />
       </Card>
     </div>
   );
