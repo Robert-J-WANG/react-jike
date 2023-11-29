@@ -23,6 +23,13 @@ const { Option } = Select;
 const { RangePicker } = DatePicker;
 
 const Article = () => {
+  /* --------------------- 定义审核状态的数据对象 -------------------- */
+  const status = {
+    0: <Tag color="gray">草稿</Tag>,
+    1: <Tag color="warning">待审核</Tag>,
+    2: <Tag color="success">审核通过</Tag>,
+    3: <Tag color="danger">审核失败</Tag>,
+  };
   /* ----------------------- 准备表格区数据 ---------------------- */
   // 准备表格列数据
   const columns = [
@@ -42,9 +49,29 @@ const Article = () => {
       width: 220,
     },
     {
+      /* --------------------- 3. 适配文章审核状态 -------------------- */
+      // 1. 实现效果:根据文章的不同状态在状态列显示不同Tag
+      // 2. 实现思路：
+      // (1). 如果要适配的状态只有俩个 - 三元条件渲染
+      // (2). 如果要适配的状态有多个 - 枚举渲染
       title: "状态",
       dataIndex: "status",
-      render: (data) => <Tag color="green">审核通过</Tag>,
+      // data就是从后端接口返回的状态数据
+      // 文章状态: 0-草稿, 1-待审核, 2-审核通过, 3-审核失败, 不传为全部(指的参数名也不携带)
+      // <Tag color="green">审核通过</Tag>
+      // render: (data) => console.log(data),
+
+      render: (data) =>
+        // 1. 使用三元条件渲染(状态只有俩个)
+        /* 
+        data === 1 ? (
+        <Tag color="warning">待审核</Tag>
+        ) : (
+        <Tag color="success">审核通过</Tag>
+        )
+        */
+        // 2. 枚举渲染(状态有多个)
+        status[data],
     },
     {
       title: "发布时间",
@@ -117,6 +144,11 @@ const Article = () => {
     };
     fetchList();
   }, []);
+  /* --------------------- 3. 适配文章审核状态 -------------------- */
+  // 1. 实现效果:根据文章的不同状态在状态列显示不同Tag
+  // 2. 实现思路：
+  // (1). 如果要适配的状态只有俩个 - 三元条件渲染
+  // (2). 如果要适配的状态有多个 - 枚举渲染
   return (
     <div>
       {/* 筛选区结构 */}
