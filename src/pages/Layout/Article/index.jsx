@@ -127,6 +127,16 @@ const Article = () => {
   // 2. 渲染channelList数据到组件
   const { channelList } = useChannel();
 
+  // 4.1 根据接口文档准备完整的请求参数对象
+  const [reqData, setReqData] = useState({
+    status: "",
+    channel_id: "",
+    begin_pubdate: "",
+    end_pubdate: "",
+    page: "2",
+    per_page: "10",
+  });
+
   /* ------------------- 2. 获取文章列表，渲染表格 ------------------- */
   // 1. 封装获取文章列表的api:apis->articleApi->getArticleListApi
   // 2. 状态数据保存返回的文章列表结果->useState
@@ -138,17 +148,48 @@ const Article = () => {
   const [articleCount, setArticleCount] = useState(0);
   useEffect(() => {
     const fetchList = async () => {
-      const res = await getArticleListApi();
+      const res = await getArticleListApi(reqData);
       setArticleList(res.data.results);
       setArticleCount(res.data.total_count);
     };
     fetchList();
-  }, []);
+  }, [reqData]);
   /* --------------------- 3. 适配文章审核状态 -------------------- */
   // 1. 实现效果:根据文章的不同状态在状态列显示不同Tag
   // 2. 实现思路：
   // (1). 如果要适配的状态只有俩个 - 三元条件渲染
   // (2). 如果要适配的状态有多个 - 枚举渲染
+
+  /* -------------------- 4. 文章列表的筛选功能 -------------------- */
+  // 本质：给请求文章列表接口传递不同的参数，向后端要不同的数据
+  // 1. 根据接口文档准备完整的请求参数对象
+  // 2. 获取用户选择的表单数据
+  // 3. 把表单数据放置到接口对应的字段中
+  // 4. 重新调用获取文章列表的接口，渲染表格数据
+
+  // 1. 根据接口文档准备完整的请求参数对象——初始化数据放在页面初次加载的逻辑中了
+  // const [reqData, setReqData] = useState({
+  //   status: "",
+  //   channel_id: "",
+  //   begin_pubdate: "",
+  //   end_pubdate: "",
+  //   page: "",
+  //   per_page: "5",
+  // });
+  // 2. 获取表单数据的回调
+  const onFinish = (formValues) => {
+    // console.log(formValues);
+    // 3. 把表单数据放置到接口对应的字段中
+    setReqData({
+      ...reqData,
+      status: formValues.status,
+      channel_id: formValues.channel_id,
+      begin_pubdate: formValues.date[0].format("YYYY-MM-DD"),
+      end_pubdate: formValues.date[1].format("YYYY-MM-DD"),
+    });
+    // 4. 重新调用获取文章列表的接口，渲染表格数据的逻辑与初始化页面时渲染表格的逻辑重复
+    // 可利用useEffect钩子的依赖项的变化，重复执行副作用函数来实现
+  };
   return (
     <div>
       {/* 筛选区结构 */}
@@ -163,7 +204,7 @@ const Article = () => {
         }
         style={{ marginBottom: 20 }}
       >
-        <Form initialValues={{ status: "" }}>
+        <Form initialValues={{ status: "" }} onFinish={onFinish}>
           <Form.Item label="状态" name="status">
             <Radio.Group>
               <Radio value={""}>全部</Radio>
