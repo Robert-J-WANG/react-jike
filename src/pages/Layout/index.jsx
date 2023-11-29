@@ -35,7 +35,7 @@ const GeekLayout = () => {
   /* ---------------------- 点击菜单跳转路由 ---------------------- */
   const navigate = useNavigate();
   const onClickMenu = (route) => {
-    console.log(route);
+    // console.log(route);
     navigate(route.key);
   };
   /* -------------------- 选中组件内容，反向高亮菜单 ------------------- */

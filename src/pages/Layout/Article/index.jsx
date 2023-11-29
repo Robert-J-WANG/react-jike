@@ -12,12 +12,12 @@ import {
 import locale from "antd/es/date-picker/locale/zh_CN";
 
 // 导入表格区资源
-import { Table, Tag, Space } from "antd";
+import { Table, Tag, Space, Popconfirm } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import img404 from "@/assets/error.png";
 import { useChannel } from "@/hooks/useChannel";
 import { useEffect, useState } from "react";
-import { getArticleListApi } from "@/apis/articleApi";
+import { delArticleApi, getArticleListApi } from "@/apis/articleApi";
 
 const { Option } = Select;
 const { RangePicker } = DatePicker;
@@ -95,12 +95,22 @@ const Article = () => {
         return (
           <Space size="middle">
             <Button type="primary" shape="circle" icon={<EditOutlined />} />
-            <Button
-              type="primary"
-              danger
-              shape="circle"
-              icon={<DeleteOutlined />}
-            />
+            {/* 添加删除确认弹框 */}
+            <Popconfirm
+              title="删除文章"
+              description="确定要删除这篇文章吗?"
+              onConfirm={() => onConfirm(data)}
+              // onCancel={cancel}
+              okText="确定"
+              cancelText="删除"
+            >
+              <Button
+                type="primary"
+                danger
+                shape="circle"
+                icon={<DeleteOutlined />}
+              />
+            </Popconfirm>
           </Space>
         );
       },
@@ -179,15 +189,15 @@ const Article = () => {
   //   per_page: "5",
   // });
   // 2. 获取表单数据的回调
-  const onFinish = (formValues) => {
-    // console.log(formValues);
+  const onFinish = (formValue) => {
+    // console.log(formValue);
     // 3. 把表单数据放置到接口对应的字段中
     setReqData({
       ...reqData,
-      status: formValues.status,
-      channel_id: formValues.channel_id,
-      begin_pubdate: formValues.date[0].format("YYYY-MM-DD"),
-      end_pubdate: formValues.date[1].format("YYYY-MM-DD"),
+      channel_id: formValue.channel_id,
+      status: formValue.status,
+      begin_pubdate: formValue.date[0].format("YYYY-MM-DD"),
+      end_pubdate: formValue.date[1].format("YYYY-MM-DD"),
     });
     // 4. 重新调用获取文章列表的接口，渲染表格数据的逻辑与初始化页面时渲染表格的逻辑重复
     // 可利用useEffect钩子的依赖项的变化，重复执行副作用函数来实现
@@ -201,6 +211,20 @@ const Article = () => {
     // 3. 使用当前页数作为请求参数，重新获取文章列表显然
     // 通过修改依赖项，引发副作用函数的重新调用
     setReqData({ ...reqData, page });
+  };
+
+  /* ---------------------- 6. 删除文章功能 --------------------- */
+  // 1. 给删除按钮套上确认删除的弹框
+  // 2. 给弹框绑定onComfirm事件，
+  const onConfirm = async (data) => {
+    // 3. 编写删除文章的接口
+    // 4. 点击确认删除，获取文章id，使用id调用删除接口
+    // console.log(data);
+    await delArticleApi(data.id);
+
+    // 5. 更新文章列表
+    // 更新依赖项，重新调用副作用函数
+    setReqData({ ...reqData });
   };
 
   return (

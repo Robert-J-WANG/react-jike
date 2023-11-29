@@ -35,7 +35,7 @@ const Publish = () => {
   // 4. 提交接口并验证是否成功
   // 收集表单数据的回调
   const onFinish = (formValues) => {
-    console.log(formValues);
+    // console.log(formValues);
     const { title, content, channel_id } = formValues;
     // 优化：边界判断-上传图片的数量要和图片类型相符
     if (imageType !== imageList.length)

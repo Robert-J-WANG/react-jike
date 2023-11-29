@@ -25,3 +25,11 @@ export function getArticleListApi(params) {
     params,
   });
 }
+
+// 删除文章的
+export function delArticleApi(id) {
+  return request({
+    url: `mp/articles/${id}`,
+    method: "DELETE",
+  });
+}
