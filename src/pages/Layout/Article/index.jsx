@@ -16,6 +16,8 @@ import { Table, Tag, Space } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import img404 from "@/assets/error.png";
 import { useChannel } from "@/hooks/useChannel";
+import { useEffect, useState } from "react";
+import { getArticleListApi } from "@/apis/articleApi";
 
 const { Option } = Select;
 const { RangePicker } = DatePicker;
@@ -97,6 +99,24 @@ const Article = () => {
   // 1. 使用自定义钩子，获取channelList
   // 2. 渲染channelList数据到组件
   const { channelList } = useChannel();
+
+  /* ------------------- 2. 获取文章列表，渲染表格 ------------------- */
+  // 1. 封装获取文章列表的api:apis->articleApi->getArticleListApi
+  // 2. 状态数据保存返回的文章列表结果->useState
+  // 3. 定义副作用函数，调用接口，获取数据
+  // 4. 保存数据到状态
+  // 5. 使用数据渲染到页面
+  const [articleList, setArticleList] = useState([]);
+  // 存储文章总数
+  const [articleCount, setArticleCount] = useState(0);
+  useEffect(() => {
+    const fetchList = async () => {
+      const res = await getArticleListApi();
+      setArticleList(res.data.results);
+      setArticleCount(res.data.total_count);
+    };
+    fetchList();
+  }, []);
   return (
     <div>
       {/* 筛选区结构 */}
@@ -144,8 +164,9 @@ const Article = () => {
         </Form>
       </Card>
       {/* 表格区结构 */}
-      <Card title={`根据筛选条件共查询到 count 条结果：`}>
-        <Table rowKey="id" columns={columns} dataSource={data} />
+      <Card title={`根据筛选条件共查询到 count 条结果：${articleCount}`}>
+        {/* // 5. 使用数据渲染到页面 */}
+        <Table rowKey="id" columns={columns} dataSource={articleList} />
       </Card>
     </div>
   );
