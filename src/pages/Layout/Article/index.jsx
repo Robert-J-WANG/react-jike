@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Card,
   Breadcrumb,
@@ -23,6 +23,7 @@ const { Option } = Select;
 const { RangePicker } = DatePicker;
 
 const Article = () => {
+  const navigate = useNavigate();
   /* --------------------- 定义审核状态的数据对象 -------------------- */
   const status = {
     0: <Tag color="gray">草稿</Tag>,
@@ -94,7 +95,14 @@ const Article = () => {
       render: (data) => {
         return (
           <Space size="middle">
-            <Button type="primary" shape="circle" icon={<EditOutlined />} />
+            {/* 编辑按钮 */}
+            {/* 点击编辑按钮，跳转到编辑页面，同时携带对应的id */}
+            <Button
+              type="primary"
+              shape="circle"
+              icon={<EditOutlined />}
+              onClick={() => navigate(`/publish?id=${data.id}`)}
+            />
             {/* 添加删除确认弹框 */}
             <Popconfirm
               title="删除文章"
@@ -226,6 +234,10 @@ const Article = () => {
     // 更新依赖项，重新调用副作用函数
     setReqData({ ...reqData });
   };
+
+  /* ------------------- 7. 跳转到编辑页（携带id) ------------------ */
+  // 1. 使用useNavigate()钩子实现跳转
+  // 2. 给位置列表注册点击事件
 
   return (
     <div>
