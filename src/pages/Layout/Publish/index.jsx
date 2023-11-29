@@ -11,14 +11,14 @@ import {
   message,
 } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import "./index.scss";
 
 // 富文本编辑器的包和样式
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { useEffect, useState } from "react";
-import { createArticleApi, getChannelApi } from "@/apis/articleApi";
+import { createArticleApi, getArticlebyIdApi } from "@/apis/articleApi";
 import { useChannel } from "@/hooks/useChannel";
 
 const { Option } = Select;
@@ -78,6 +78,28 @@ const Publish = () => {
   // 1. 找到限制上传数量的组件属性：maxCount
   // 2. 使用imageType进行绑定控制
 
+  /* -------------------- 6.文章编辑-数据的回填功能 -------------------- */
+  // 现象效果：跳转到编辑页面时，把页面中的字段完成数据的回显
+  // 1. 通过文章id获取到文章详情数据（调用接口）
+  // 获取文章id
+  const [searchParams] = useSearchParams();
+  const articleId = searchParams.get("id");
+  console.log(articleId);
+  // 获取到文章详情数据（调用接口）
+  // 2. 调用Form组件实例方法setFieldsValue回显数据
+  // 创建Form实例
+  const [form] = Form.useForm();
+  useEffect(() => {
+    const fetchArticle = async (articleId) => {
+      const res = await getArticlebyIdApi(articleId);
+      console.log(res);
+      // 2. 调用Form组件实例方法setFieldsValue回显数据
+      form.getFieldValue(res);
+    };
+    fetchArticle();
+  }, [articleId, form]);
+  // 2. 调用Form组件实例方法setFieldsValue回显数据
+
   return (
     <div className="publish">
       <Card
@@ -97,6 +119,7 @@ const Publish = () => {
           initialValues={{ type: 0 }}
           // 收集表单数据的方法
           onFinish={onFinish}
+          form={form}
         >
           <Form.Item
             label="标题"

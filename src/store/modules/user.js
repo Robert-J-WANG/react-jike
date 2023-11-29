@@ -1,5 +1,5 @@
 import { getProfileApi, loginApi } from "@/apis/userApi";
-import { setToken as _setToken, getToken, removeToken, request } from "@/utils";
+import { setToken as _setToken, getToken, removeToken } from "@/utils";
 import { createSlice } from "@reduxjs/toolkit";
 
 // 和用户相关的状态管理

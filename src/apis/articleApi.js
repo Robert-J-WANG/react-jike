@@ -33,3 +33,11 @@ export function delArticleApi(id) {
     method: "DELETE",
   });
 }
+
+// 获取文章详情的
+export function getArticlebyIdApi(id) {
+  return request({
+    url: `mp/articles/${id}`,
+    method: "GET",
+  });
+}

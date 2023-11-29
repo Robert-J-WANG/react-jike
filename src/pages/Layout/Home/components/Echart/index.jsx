@@ -35,7 +35,7 @@ export const Echart = ({ title }) => {
 
     // 4. 使用图标参数完成图标的渲染
     option && myChart.setOption(option);
-  }, []);
+  }, [title]);
   /* 准备用于绑定图标渲染的dom节点,必须有宽和高 */
   return <div ref={chartRef} style={{ width: "600px", height: "400px" }}></div>;
 };
