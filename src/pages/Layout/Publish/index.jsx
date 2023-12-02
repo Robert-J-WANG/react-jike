@@ -116,7 +116,11 @@ const Publish = () => {
         );
         // 注意要在form中绑定
       };
-      fetchArticle();
+      // 根据是否有文章id判断是发布文章？编辑文章？
+      // 只有编辑文章是才调用文章详情API
+      if (articleId) {
+        fetchArticle();
+      }
     }
   }, [articleId, form]);
 
@@ -127,7 +131,8 @@ const Publish = () => {
           <Breadcrumb
             items={[
               { title: <Link to={"/"}>首页</Link> },
-              { title: "发布文章" },
+              // 根据是否有文章id判断是发布文章？编辑文章？
+              { title: `${articleId ? "编辑" : "发布"}文章` },
             ]}
           />
         }
