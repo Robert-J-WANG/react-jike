@@ -11,7 +11,7 @@ import {
   message,
 } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import "./index.scss";
 
 // 富文本编辑器的包和样式
@@ -24,6 +24,7 @@ import { useChannel } from "@/hooks/useChannel";
 const { Option } = Select;
 
 const Publish = () => {
+  const navigate = useNavigate();
   /* ---------------------1. channel列表功能 -------------------- */
   // 使用自定义钩子，获取频道列表
   const { channelList } = useChannel();
@@ -52,6 +53,8 @@ const Publish = () => {
     };
     // 提交数据到接口
     createArticleApi(data);
+    message.success(" 发表成功！");
+    navigate("/article");
   };
   /* --------------------- 3. 发布封面图片功能 -------------------- */
   // 1. 为 Upload 组件添加 `action 属性`，配置封面图片上传接口地址
@@ -84,7 +87,7 @@ const Publish = () => {
   // 获取文章id
   const [searchParams] = useSearchParams();
   const articleId = searchParams.get("id");
-  console.log(articleId);
+  // console.log(articleId);
   // 获取到文章详情数据（调用接口）
   // 2. 调用Form组件实例方法setFieldsValue回显数据
   // 创建Form实例
@@ -97,7 +100,21 @@ const Publish = () => {
         const res = await getArticlebyIdApi(articleId);
         // console.log(res);
         // 2. 调用Form组件实例方法setFieldsValue回显数据
-        form.setFieldsValue(res.data);
+        // form.setFieldsValue(res.data);
+        // 为什么无法回填封面图片呢？
+        // 是数据结构不匹配的原因：需要的数据是：setFieldsValue({type:3})，而api返回的数据是：{cover:{type:3}}
+        console.log(res);
+        // 回填图片类型
+        form.setFieldsValue({ ...res.data, type: res.data.cover.type });
+        // 回显图片列表类型
+        setImageType(res.data.cover.type);
+        // 回显图片雷彪
+        setImageList(
+          res.data.cover.images.map((url) => {
+            return { url };
+          })
+        );
+        // 注意要在form中绑定
       };
       fetchArticle();
     }
@@ -169,6 +186,8 @@ const Publish = () => {
                 // 1. 找到限制上传数量的组件属性：maxCount
                 // 2. 使用imageType进行绑定控制
                 maxCount={imageType}
+                // 绑定图片列表，用于回显
+                fileList={imageList}
               >
                 <div style={{ marginTop: 8 }}>
                   <PlusOutlined />
