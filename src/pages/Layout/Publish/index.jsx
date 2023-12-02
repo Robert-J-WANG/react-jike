@@ -90,15 +90,18 @@ const Publish = () => {
   // 创建Form实例
   const [form] = Form.useForm();
   useEffect(() => {
-    const fetchArticle = async (articleId) => {
-      const res = await getArticlebyIdApi(articleId);
-      console.log(res);
-      // 2. 调用Form组件实例方法setFieldsValue回显数据
-      form.getFieldValue(res);
-    };
-    fetchArticle();
+    // Check if articleId is defined before using it
+    // useSearchParams()异步钩子，只有获取articleId后才执行下面的操作
+    if (articleId) {
+      const fetchArticle = async () => {
+        const res = await getArticlebyIdApi(articleId);
+        // console.log(res);
+        // 2. 调用Form组件实例方法setFieldsValue回显数据
+        form.setFieldsValue(res.data);
+      };
+      fetchArticle();
+    }
   }, [articleId, form]);
-  // 2. 调用Form组件实例方法setFieldsValue回显数据
 
   return (
     <div className="publish">
