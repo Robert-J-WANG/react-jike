@@ -18,7 +18,11 @@ import "./index.scss";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { useEffect, useState } from "react";
-import { createArticleApi, getArticlebyIdApi } from "@/apis/articleApi";
+import {
+  createArticleApi,
+  getArticlebyIdApi,
+  updateArticleApi,
+} from "@/apis/articleApi";
 import { useChannel } from "@/hooks/useChannel";
 
 const { Option } = Select;
@@ -47,13 +51,30 @@ const Publish = () => {
       content,
       cover: {
         type: imageType, // 上传图片的类型：0-无图，1-1图，3-3图
-        image: imageList.map((item) => item.response.data.url), // 图片列表
+        // 这里的url处理逻辑只是在新增时的逻辑
+        // image: imageList.map((item) => item.response.data.url), // 图片列表
+        // 编辑时也要做处理
+        image: imageList.map((item) => {
+          if (item.response) {
+            // 发布的逻辑
+            return item.response.data.url;
+          } else {
+            // 编辑的逻辑
+            return item.url;
+          }
+        }),
       },
       channel_id,
     };
     // 提交数据到接口
-    createArticleApi(data);
-    message.success(" 发表成功！");
+    // 根据id判断调用发布文章接口还是更新文章接口
+    if (articleId) {
+      updateArticleApi({ ...data, id: articleId });
+    } else {
+      createArticleApi(data);
+      message.success(" 发表成功！");
+    }
+
     navigate("/article");
   };
   /* --------------------- 3. 发布封面图片功能 -------------------- */

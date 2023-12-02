@@ -17,6 +17,14 @@ export function createArticleApi(data) {
     data,
   });
 }
+//  更新文章的
+export function updateArticleApi(data) {
+  return request({
+    url: `mp/articles/${data.id}?draft=false`,
+    method: "PUT",
+    data,
+  });
+}
 // 获取文章列表的
 export function getArticleListApi(params) {
   return request({
