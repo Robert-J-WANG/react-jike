@@ -1,6 +1,6 @@
 import { Echart } from "./components/Echart";
 
-export const Home = () => {
+const Home = () => {
   return (
     <div>
       <Echart title={"hello"} />
@@ -8,3 +8,4 @@ export const Home = () => {
     </div>
   );
 };
+export default Home;
